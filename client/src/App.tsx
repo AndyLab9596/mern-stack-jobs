@@ -9,7 +9,7 @@ const App = () => {
     <BrowserRouter>
       <Routes>
         <Route path="landing" element={<LandingPage />} />
-        <Route path="register" element={Register} />
+        <Route path="register" element={<Register />} />
         <Route path="*" element={Error} />
       </Routes>
     </BrowserRouter>
