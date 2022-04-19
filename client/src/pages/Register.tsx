@@ -37,7 +37,12 @@ const Register = () => {
   });
 
   const handleSubmit = (values: FormValueType) => {
-    console.log(values);
+    const { name, email, password } = values;
+    if (isMember) {
+      console.log({ email, password });
+    } else {
+      console.log({ name, email, password });
+    }
   };
 
   return (
