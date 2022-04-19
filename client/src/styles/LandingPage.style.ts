@@ -15,8 +15,10 @@ const Wrapper = styled.main`
     grid-template-columns: 1;
     align-items: center;
     margin-top: -3rem;
+    min-height: calc(100vh - var(--nav-height));
     @media (min-width: 992px) {
       grid-template-columns: repeat(2, 1fr);
+      gap: 3rem
     }
   }
 
