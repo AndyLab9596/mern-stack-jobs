@@ -46,6 +46,7 @@ export const Form = ({
     if (defaultValues) {
       formHandlers.reset(defaultValues);
     }
+    // eslint-disable-next-line react-hooks/exhaustive-deps
   }, [JSON.stringify(defaultValues)]);
 
   const onSubmit = formHandlers.handleSubmit(async (values) => {
