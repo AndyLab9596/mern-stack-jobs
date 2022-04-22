@@ -4,6 +4,8 @@ import * as yup from "yup";
 import Form from "../components/Form";
 import Logo from "../components/Logo";
 import FormInputField from "../components/FormInputField";
+import Alert from "../components/Alert";
+// import { useAppContext } from "../context/appContext";
 
 interface FormValueType {
   name: string;
@@ -13,6 +15,9 @@ interface FormValueType {
 }
 
 const Register = () => {
+  // const {
+  //   state: { isLoading, showAlert },
+  // } = useAppContext();
   const [isMember, setIsMember] = useState<boolean>(true);
   const initialValues = {
     name: "",
@@ -55,6 +60,7 @@ const Register = () => {
       >
         <Logo />
         <h3>{isMember ? "Login" : "Register"}</h3>
+        {/* {showAlert && <Alert />} */}
         {!isMember && <FormInputField type="text" label="Name" name="name" />}
         <FormInputField type="email" label="Email" name="email" />
         <FormInputField type="password" label="Password" name="password" />
