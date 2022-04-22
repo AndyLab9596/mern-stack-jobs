@@ -11,6 +11,7 @@ import errorHandlerMiddleware from "./middleware/error-handler";
 
 // routers
 import authRouter from "./routes/authRoutes";
+import jobRouter from "./routes/jobRoutes";
 
 dotenv.config();
 const app: Application = express();
@@ -24,6 +25,7 @@ app.get("/", (req: Request, res: Response) => {
 });
 
 app.use("/api/v1/auth", authRouter);
+app.use("/api/v1/jobs", jobRouter);
 
 // Custom Middleware
 app.use(notFoundMiddleware);
