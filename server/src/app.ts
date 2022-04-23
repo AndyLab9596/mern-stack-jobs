@@ -1,3 +1,4 @@
+import cors from "cors";
 import express, { Application, Request, Response } from "express";
 import "express-async-errors";
 import dotenv from "dotenv";
@@ -17,14 +18,14 @@ dotenv.config();
 const app: Application = express();
 
 // Middleware
+app.use(cors());
 app.use(express.json());
 app.use(morgan("tiny"));
-console.log('Hello');
-console.log('Hello');
-console.log('Hello');
-app.get("/", (req: Request, res: Response) => {
-
-  res.send("hello world");
+console.log("Hello");
+console.log("Hello");
+console.log("Hello");
+app.get("/api/v1", (req: Request, res: Response) => {
+  res.json({ msg: "hello world" });
 });
 
 app.use("/api/v1/auth", authRouter);
