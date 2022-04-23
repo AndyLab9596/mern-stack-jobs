@@ -8,8 +8,8 @@ type ActionMap<M extends { [index: string]: any }> = {
 };
 
 type AlertPayload = {
-  [ActionTypes.DISPLAY_ALERT]: undefined;
-  [ActionTypes.CLEAR_ALERT]: undefined;
+  [ActionTypes.DISPLAY_ALERT]: undefined,
+  [ActionTypes.CLEAR_ALERT]: undefined
 };
 
 type AlertActions = ActionMap<AlertPayload>[keyof AlertPayload];
