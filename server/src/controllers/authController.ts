@@ -1,5 +1,4 @@
 import { Request, Response } from "express";
-import isEmail from "validator/lib/isEmail";
 import User from "../models/User";
 import CustomError from "../errors";
 import { StatusCodes } from "http-status-codes";
