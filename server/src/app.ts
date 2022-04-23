@@ -19,8 +19,11 @@ const app: Application = express();
 // Middleware
 app.use(express.json());
 app.use(morgan("tiny"));
-
+console.log('Hello');
+console.log('Hello');
+console.log('Hello');
 app.get("/", (req: Request, res: Response) => {
+
   res.send("hello world");
 });
 

@@ -1,7 +1,7 @@
 import mongoose, { Types, Document } from "mongoose";
 import validator from "validator";
 import bcrypt from "bcryptjs";
-
+import jwt from "jsonwebtoken";
 interface IUser extends Document {
   name: string;
   email: string;
@@ -9,6 +9,7 @@ interface IUser extends Document {
   lastName: string;
   location: string;
   comparePassword: (candidatePassword: string) => Promise<boolean>;
+  createJWT: () => void;
   _id: Types.ObjectId;
 }
 
@@ -40,6 +41,7 @@ const UserSchema = new mongoose.Schema<IUser>({
     type: String,
     required: [true, "Please provide password"],
     minlength: 6,
+    select: false,
   },
   location: {
     type: String,
@@ -63,6 +65,12 @@ UserSchema.methods.comparePassword = async function (
     this.password
   );
   return isPasswordCorrect;
+};
+
+UserSchema.methods.createJWT = function () {
+  return jwt.sign({ userId: this._id }, process.env.JWT_SECRET as string, {
+    expiresIn: process.env.JWT_LIFETIME,
+  });
 };
 
 export default mongoose.model("User", UserSchema);
