@@ -1,6 +1,12 @@
 enum ActionTypes {
+  // Alert
   DISPLAY_ALERT = "DISPLAY_ALERT",
   CLEAR_ALERT = "CLEAR_ALERT",
+
+  // Authentication
+  REGISTER_USER_BEGIN = "REGISTER_USER_BEGIN",
+  REGISTER_USER_SUCCESS = "REGISTER_USER_SUCCESS",
+  REGISTER_USER_ERROR = "REGISTER_USER_ERROR",
 }
 
 export default ActionTypes;

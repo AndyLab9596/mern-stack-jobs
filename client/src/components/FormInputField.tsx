@@ -45,7 +45,7 @@ const FormInputField: React.FC<FormInputFieldProps> = ({
   return (
     <FormInputWrapper>
       <label htmlFor={name}>{label}</label>
-      <input {...register(`${name}` as const)} />
+      <input type={type} {...register(`${name}` as const)} />
       <p className="error-message">
         {!!errors[name] && `*${errors[name].message}`}
       </p>

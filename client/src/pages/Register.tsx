@@ -15,7 +15,7 @@ interface FormValueType {
 }
 
 const Register = () => {
-  const { showAlert } = useAppContext();
+  const { showAlert, registerUser, isLoading } = useAppContext();
   const [isMember, setIsMember] = useState<boolean>(true);
   const initialValues = {
     name: "",
@@ -44,6 +44,7 @@ const Register = () => {
     if (isMember) {
       console.log({ email, password });
     } else {
+      registerUser({ name, email, password });
       console.log({ name, email, password });
     }
   };
@@ -62,7 +63,7 @@ const Register = () => {
         {!isMember && <FormInputField type="text" label="Name" name="name" />}
         <FormInputField type="email" label="Email" name="email" />
         <FormInputField type="password" label="Password" name="password" />
-        <button type="submit" className="btn btn-block">
+        <button type="submit" className="btn btn-block" disabled={isLoading}>
           Submit
         </button>
         <p className="footer">

@@ -11,12 +11,23 @@ interface IAppProvider {
   children: ReactChild;
 }
 
+export interface IUser {
+  name?: string;
+  email: string;
+  password: string;
+}
+
 export type InitialStateType = {
   isLoading: boolean;
   showAlert: boolean;
   alertText: string;
   alertType: string;
   displayAlert: () => void;
+
+  user: IUser | null;
+  token: string | null;
+  userLocation: string;
+  registerUser: (currentUser: IUser) => void;
 };
 
 const initialState: InitialStateType = {
@@ -25,6 +36,10 @@ const initialState: InitialStateType = {
   alertText: "",
   alertType: "",
   displayAlert: () => null,
+  user: null,
+  token: null,
+  userLocation: "",
+  registerUser: () => null,
 };
 
 const AppContext = createContext<InitialStateType>(initialState);
@@ -43,8 +58,13 @@ const AppProvider = ({ children }: IAppProvider) => {
     clearAlert();
   };
 
+  // Authentication Fnc
+  const registerUser = async (currentUser: IUser) => {
+    console.log(currentUser);
+  };
+
   return (
-    <AppContext.Provider value={{ ...state, displayAlert }}>
+    <AppContext.Provider value={{ ...state, displayAlert, registerUser }}>
       {children}
     </AppContext.Provider>
   );

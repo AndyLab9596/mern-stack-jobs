@@ -52,8 +52,7 @@ export const Form = ({
   const onSubmit = formHandlers.handleSubmit(async (values) => {
     try {
       props.onSubmit && (await props.onSubmit(values));
-      const formValues = formHandlers.getValues();
-      formHandlers.reset(formValues);
+      formHandlers.reset();
     } catch (e: any) {
       if (e instanceof SubmitError && e.errors) {
         Object.keys(e.errors).map((name) =>
