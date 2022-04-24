@@ -10,13 +10,14 @@ import {
   SharedLayout,
   Stats,
 } from './pages/dashboard'
+import ProtectedRoute from "./components/ProtectedRoute";
 
 const App = () => {
   return (
     <BrowserRouter>
       <Routes>
-        <Route path="/dashboard" >
-          <Route path="stats" element={<Stats />} />
+        <Route path="/" element={<ProtectedRoute><SharedLayout /></ProtectedRoute>}>
+          <Route index element={<Stats />} />
           <Route path="all-jobs" element={<AllJobs />} />
           <Route path="add-job" element={<AddJob />} />
           <Route path="profile" element={<Profile />} />

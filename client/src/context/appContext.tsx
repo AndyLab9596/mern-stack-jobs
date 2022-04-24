@@ -93,7 +93,6 @@ const AppProvider = ({ children }: IAppProvider) => {
       addUserToLocalStorage({ user, token, location })
     } catch (error: any) {
       // localStorage
-      console.log(error.response)
       dispatch({ type: ActionTypes.REGISTER_USER_ERROR, payload: { msg: error.response.data.msg } })
     }
     clearAlert()
