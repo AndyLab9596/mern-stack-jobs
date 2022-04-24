@@ -24,9 +24,7 @@ if (process.env.NODE_ENV !== 'production') {
 app.use(cors());
 app.use(express.json());
 // app.use(morgan("tiny"));
-console.log("Hello");
-console.log("Hello");
-console.log("Hello");
+
 app.get("/api/v1", (req: Request, res: Response) => {
   res.json({ msg: "hello world" });
 });
@@ -44,6 +42,20 @@ const start = async () => {
     await connectDb(process.env.MONGO_URL as string);
     app.listen(port, () => {
       console.log(`Server is listening on port ${port}...`);
+    }).on('error', function (err) {
+
+      process.once('SIGUSR2', function () {
+        process.kill(process.pid)
+      })
+
+      process.on('SIGINT', function () {
+        process.kill(process.pid)
+      })
+
+      process.on('uncaughtException', function (err) {
+        console.log(err)
+      })
+
     });
   } catch (error) {
     console.log(error);

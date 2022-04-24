@@ -1,15 +1,26 @@
 import React from "react";
+import { BrowserRouter, Route, Routes } from "react-router-dom";
+import Error from "./pages/Error";
 import LandingPage from "./pages/LandingPage";
 import Register from "./pages/Register";
-import Error from "./pages/Error";
-import { BrowserRouter, Routes, Route } from "react-router-dom";
-import Dashboard from "./pages/Dashboard";
+import {
+  AddJob,
+  AllJobs,
+  Profile,
+  SharedLayout,
+  Stats,
+} from './pages/dashboard'
 
 const App = () => {
   return (
     <BrowserRouter>
       <Routes>
-        <Route path="/" element={<Dashboard />} />
+        <Route path="/dashboard" >
+          <Route path="stats" element={<Stats />} />
+          <Route path="all-jobs" element={<AllJobs />} />
+          <Route path="add-job" element={<AddJob />} />
+          <Route path="profile" element={<Profile />} />
+        </Route>
         <Route path="landing" element={<LandingPage />} />
         <Route path="register" element={<Register />} />
         <Route path="*" element={<Error />} />
