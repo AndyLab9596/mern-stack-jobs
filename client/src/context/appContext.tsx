@@ -2,8 +2,9 @@ import React, {
   createContext,
   ReactChild,
   useContext,
-  useReducer,
+  useReducer
 } from "react";
+import authApi from "../api/authentication";
 import ActionTypes from "./actions";
 import reducer from "./reducer";
 
@@ -14,7 +15,8 @@ interface IAppProvider {
 export interface IUser {
   name?: string;
   email: string;
-  password: string;
+  password?: string;
+  location?: string;
 }
 
 export type InitialStateType = {
@@ -27,6 +29,7 @@ export type InitialStateType = {
   user: IUser | null;
   token: string | null;
   userLocation: string;
+  jobLocation: string;
   registerUser: (currentUser: IUser) => void;
 };
 
@@ -39,6 +42,7 @@ const initialState: InitialStateType = {
   user: null,
   token: null,
   userLocation: "",
+  jobLocation: "",
   registerUser: () => null,
 };
 
@@ -60,7 +64,18 @@ const AppProvider = ({ children }: IAppProvider) => {
 
   // Authentication Fnc
   const registerUser = async (currentUser: IUser) => {
-    console.log(currentUser);
+    dispatch({ type: ActionTypes.REGISTER_USER_BEGIN });
+    try {
+      const response = await authApi.register(currentUser);
+      const { user, token, location } = response;
+      dispatch({ type: ActionTypes.REGISTER_USER_SUCCESS, payload: { user, token, location } })
+      // localStorage
+    } catch (error: any) {
+      // localStorage
+      console.log(error.response)
+      dispatch({ type: ActionTypes.REGISTER_USER_ERROR, payload: { msg: error.response.data.msg } })
+    }
+    clearAlert()
   };
 
   return (
@@ -73,3 +88,5 @@ export const useAppContext = () => {
   return useContext(AppContext);
 };
 export { AppProvider, initialState };
+
+

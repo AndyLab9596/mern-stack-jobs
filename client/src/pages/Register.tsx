@@ -1,4 +1,5 @@
-import React, { useState } from "react";
+import React, { useEffect, useState } from "react";
+import { useNavigate } from "react-router-dom";
 import * as yup from "yup";
 import Alert from "../components/Alert";
 import Form from "../components/Form";
@@ -15,7 +16,8 @@ interface FormValueType {
 }
 
 const Register = () => {
-  const { showAlert, registerUser, isLoading } = useAppContext();
+  const { showAlert, registerUser, isLoading, user } = useAppContext();
+  const navigate = useNavigate();
   const [isMember, setIsMember] = useState<boolean>(true);
   const initialValues = {
     name: "",
@@ -42,12 +44,18 @@ const Register = () => {
   const handleSubmit = (values: FormValueType) => {
     const { name, email, password } = values;
     if (isMember) {
-      console.log({ email, password });
     } else {
       registerUser({ name, email, password });
-      console.log({ name, email, password });
     }
   };
+
+  useEffect(() => {
+    if (user) {
+      setTimeout(() => {
+        navigate('/')
+      }, 300)
+    }
+  }, [user, navigate])
 
   return (
     <AuthWrapper>
@@ -69,6 +77,7 @@ const Register = () => {
         <p className="footer">
           {isMember ? `Not a member yet?${" "}` : `Already a member?${" "}`}
           <button
+            type="button"
             className="member-btn"
             onClick={() => setIsMember((prevState) => !prevState)}
           >

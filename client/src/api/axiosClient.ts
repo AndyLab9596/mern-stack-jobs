@@ -1,4 +1,4 @@
-import axios, { AxiosRequestConfig, AxiosResponse } from "axios";
+import axios, { AxiosRequestConfig, AxiosResponse, AxiosError } from "axios";
 
 const axiosClient = axios.create({
   baseURL: "/api/v1",
@@ -26,7 +26,7 @@ axiosClient.interceptors.response.use(
     // Do something with response data
     return response.data;
   },
-  function (error) {
+  function (error: AxiosError) {
     // Any status codes that falls outside the range of 2xx cause this function to trigger
     // Do something with response error
     // HTTP code
