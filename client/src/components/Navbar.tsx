@@ -1,15 +1,16 @@
-import React from 'react'
+import React, { useState } from 'react'
 import Wrapper from '../styles/Navbar.style'
 import { FaAlignLeft, FaCaretDown, FaUserCircle } from 'react-icons/fa';
 import { useAppContext } from '../context/appContext';
 import Logo from './Logo';
 
 const Navbar = () => {
-
+  const { toggleSidebar, logoutUser, user } = useAppContext();
+  const [showLogout, setShowLogout] = useState<boolean>(false);
   return (
     <Wrapper>
       <div className="nav-center">
-        <button type='button' className='toggle-btn' onClick={() => console.log('toggle sidebar')}>
+        <button type='button' className='toggle-btn' onClick={() => toggleSidebar()}>
           <FaAlignLeft />
         </button>
         <div>
@@ -19,13 +20,13 @@ const Navbar = () => {
           </h3>
         </div>
         <div className="btn-container">
-          <button type='button' className='btn' onClick={() => console.log('show/hide dropdown')} >
+          <button type='button' className='btn' onClick={() => setShowLogout(prevState => !prevState)} >
             <FaUserCircle />
-            john
+            {user && user.name}
             <FaCaretDown />
           </button>
-          <div className="dropdown show-dropdown">
-            <button type='button' className='dropdown-btn' onClick={() => console.log('log out user')}>
+          <div className={showLogout ? 'dropdown show-dropdown' : 'dropdown'}>
+            <button type='button' className='dropdown-btn' onClick={() => logoutUser()}>
               logout
             </button>
           </div>

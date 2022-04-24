@@ -33,6 +33,9 @@ export type InitialStateType = {
   jobLocation: string;
   registerUser: (currentUser: IUser) => void;
   loginUser: (currentUser: IUser) => void;
+  logoutUser: () => void;
+  showSidebar: boolean;
+  toggleSidebar: () => void;
 };
 
 const token = localStorage.getItem('token');
@@ -51,6 +54,9 @@ const initialState: InitialStateType = {
   jobLocation: userLocation ? userLocation : '',
   registerUser: () => null,
   loginUser: () => null,
+  logoutUser: () => null,
+  showSidebar: false,
+  toggleSidebar: () => null,
 };
 
 const AppContext = createContext<InitialStateType>(initialState);
@@ -114,9 +120,25 @@ const AppProvider = ({ children }: IAppProvider) => {
     clearAlert()
   };
 
+  const logoutUser = () => {
+    dispatch({ type: ActionTypes.LOGOUT_USER });
+    removeUserFromLocalStorage()
+  }
+
+  const toggleSidebar = () => {
+    dispatch({ type: ActionTypes.TOGGLE_SIDEBAR })
+  }
+
 
   return (
-    <AppContext.Provider value={{ ...state, displayAlert, registerUser, loginUser }}>
+    <AppContext.Provider value={{
+      ...state,
+      displayAlert,
+      registerUser,
+      loginUser,
+      toggleSidebar,
+      logoutUser
+    }}>
       {children}
     </AppContext.Provider>
   );

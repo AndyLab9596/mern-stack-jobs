@@ -31,13 +31,20 @@ type AuthPayload = {
   [ActionTypes.LOGIN_USER_ERROR]: {
     msg: string,
   }
+  [ActionTypes.LOGOUT_USER]: undefined
+}
+
+type DashboardPayload = {
+  [ActionTypes.TOGGLE_SIDEBAR]: undefined
 }
 
 type AuthActions = ActionMap<AuthPayload>[keyof AuthPayload];
 
 type AlertActions = ActionMap<AlertPayload>[keyof AlertPayload];
 
-const reducer = (state: InitialStateType, action: AlertActions | AuthActions) => {
+type DashboardActions = ActionMap<DashboardPayload>[keyof DashboardPayload];
+
+const reducer = (state: InitialStateType, action: AlertActions | AuthActions | DashboardActions) => {
   switch (action.type) {
     case ActionTypes.DISPLAY_ALERT: {
       return {
@@ -115,6 +122,23 @@ const reducer = (state: InitialStateType, action: AlertActions | AuthActions) =>
         showAlert: true,
         alertType: "danger",
         alertText: action.payload.msg,
+      }
+    }
+
+    case ActionTypes.LOGOUT_USER: {
+      return {
+        ...state,
+        user: null,
+        token: null,
+        userLocation: "",
+        jobLocation: "",
+      }
+    }
+
+    case ActionTypes.TOGGLE_SIDEBAR: {
+      return {
+        ...state,
+        showSidebar: !state.showSidebar
       }
     }
 
