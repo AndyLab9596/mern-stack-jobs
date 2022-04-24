@@ -5,6 +5,7 @@ import React, {
   useReducer
 } from "react";
 import authApi from "../api/authentication";
+import { UserRegister } from "../models";
 import ActionTypes from "./actions";
 import reducer from "./reducer";
 
@@ -33,16 +34,20 @@ export type InitialStateType = {
   registerUser: (currentUser: IUser) => void;
 };
 
+const token = localStorage.getItem('token');
+const userLocation = localStorage.getItem('location');
+const user = localStorage.getItem('user')
+
 const initialState: InitialStateType = {
   isLoading: false,
   showAlert: false,
   alertText: "",
   alertType: "",
   displayAlert: () => null,
-  user: null,
-  token: null,
-  userLocation: "",
-  jobLocation: "",
+  user: user ? JSON.parse(user) : null,
+  token: token || null,
+  userLocation:  userLocation ? userLocation : '',
+  jobLocation: userLocation ? userLocation : '',
   registerUser: () => null,
 };
 
@@ -62,6 +67,19 @@ const AppProvider = ({ children }: IAppProvider) => {
     clearAlert();
   };
 
+  // localStorage setup
+  const addUserToLocalStorage = ({ user, token, location }: UserRegister) => {
+    localStorage.setItem('token', token);
+    localStorage.setItem('user', JSON.stringify(user))
+    localStorage.setItem('location', location)
+  }
+
+  const removeUserFromLocalStorage = () => {
+    localStorage.removeItem('token');
+    localStorage.removeItem('user')
+    localStorage.removeItem('location')
+  }
+
   // Authentication Fnc
   const registerUser = async (currentUser: IUser) => {
     dispatch({ type: ActionTypes.REGISTER_USER_BEGIN });
@@ -70,6 +88,7 @@ const AppProvider = ({ children }: IAppProvider) => {
       const { user, token, location } = response;
       dispatch({ type: ActionTypes.REGISTER_USER_SUCCESS, payload: { user, token, location } })
       // localStorage
+      addUserToLocalStorage({ user, token, location })
     } catch (error: any) {
       // localStorage
       console.log(error.response)
