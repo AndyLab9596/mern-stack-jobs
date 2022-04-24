@@ -7,6 +7,10 @@ const authApi = {
     const url = "/auth/register";
     return axiosClient.post(url, currentUser);
   },
+  login(currentUser: IUser): Promise<UserRegister> {
+    const url = "/auth/login";
+    return axiosClient.post(url, currentUser);
+  }
 };
 
 export default authApi;

@@ -32,6 +32,7 @@ export type InitialStateType = {
   userLocation: string;
   jobLocation: string;
   registerUser: (currentUser: IUser) => void;
+  loginUser: (currentUser: IUser) => void;
 };
 
 const token = localStorage.getItem('token');
@@ -46,9 +47,10 @@ const initialState: InitialStateType = {
   displayAlert: () => null,
   user: user ? JSON.parse(user) : null,
   token: token || null,
-  userLocation:  userLocation ? userLocation : '',
+  userLocation: userLocation ? userLocation : '',
   jobLocation: userLocation ? userLocation : '',
   registerUser: () => null,
+  loginUser: () => null,
 };
 
 const AppContext = createContext<InitialStateType>(initialState);
@@ -97,8 +99,25 @@ const AppProvider = ({ children }: IAppProvider) => {
     clearAlert()
   };
 
+  const loginUser = async (currentUser: IUser) => {
+    dispatch({ type: ActionTypes.LOGIN_USER_BEGIN });
+    try {
+      const response = await authApi.login(currentUser);
+      const { user, token, location } = response;
+      dispatch({ type: ActionTypes.LOGIN_USER_SUCCESS, payload: { user, token, location } })
+      // localStorage
+      addUserToLocalStorage({ user, token, location })
+    } catch (error: any) {
+      // localStorage
+      console.log(error.response)
+      dispatch({ type: ActionTypes.LOGIN_USER_ERROR, payload: { msg: error.response.data.msg } })
+    }
+    clearAlert()
+  };
+
+
   return (
-    <AppContext.Provider value={{ ...state, displayAlert, registerUser }}>
+    <AppContext.Provider value={{ ...state, displayAlert, registerUser, loginUser }}>
       {children}
     </AppContext.Provider>
   );

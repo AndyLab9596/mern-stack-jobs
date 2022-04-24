@@ -21,6 +21,15 @@ type AuthPayload = {
   },
   [ActionTypes.REGISTER_USER_ERROR]: {
     msg: string
+  },
+  [ActionTypes.LOGIN_USER_BEGIN]: undefined,
+  [ActionTypes.LOGIN_USER_SUCCESS]: {
+    user: IUser,
+    token: string,
+    location: string
+  },
+  [ActionTypes.LOGIN_USER_ERROR]: {
+    msg: string,
   }
 }
 
@@ -69,6 +78,37 @@ const reducer = (state: InitialStateType, action: AlertActions | AuthActions) =>
     }
 
     case ActionTypes.REGISTER_USER_ERROR: {
+      return {
+        ...state,
+        isLoading: false,
+        showAlert: true,
+        alertType: "danger",
+        alertText: action.payload.msg,
+      }
+    }
+
+    case ActionTypes.LOGIN_USER_BEGIN: {
+      return {
+        ...state,
+        isLoading: true
+      }
+    }
+
+    case ActionTypes.LOGIN_USER_SUCCESS: {
+      return {
+        ...state,
+        isLoading: false,
+        user: action.payload.user,
+        token: action.payload.token,
+        userLocation: action.payload.location,
+        jobLocation: action.payload.location,
+        showAlert: true,
+        alertType: "success",
+        alertText: "Login successfully! Redirecting...",
+      }
+    }
+
+    case ActionTypes.LOGIN_USER_ERROR: {
       return {
         ...state,
         isLoading: false,

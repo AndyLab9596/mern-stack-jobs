@@ -16,7 +16,7 @@ interface FormValueType {
 }
 
 const Register = () => {
-  const { showAlert, registerUser, isLoading, user } = useAppContext();
+  const { showAlert, registerUser, isLoading, user, loginUser } = useAppContext();
   const navigate = useNavigate();
   const [isMember, setIsMember] = useState<boolean>(true);
   const initialValues = {
@@ -44,6 +44,7 @@ const Register = () => {
   const handleSubmit = (values: FormValueType) => {
     const { name, email, password } = values;
     if (isMember) {
+      loginUser({ email, password })
     } else {
       registerUser({ name, email, password });
     }
