@@ -18,9 +18,12 @@ dotenv.config();
 const app: Application = express();
 
 // Middleware
+if (process.env.NODE_ENV !== 'production') {
+  app.use(morgan('dev'))
+}
 app.use(cors());
 app.use(express.json());
-app.use(morgan("tiny"));
+// app.use(morgan("tiny"));
 console.log("Hello");
 console.log("Hello");
 console.log("Hello");

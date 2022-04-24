@@ -30,7 +30,25 @@ const register = async (req: Request, res: Response) => {
 };
 
 const login = async (req: Request, res: Response) => {
-  res.send("Login ");
+  const { email, password } = req.body;
+
+  if (!email || !password) throw new CustomError.UnauthenticatedError('Please provide all values');
+
+  const user = await User.findOne({ email }).select('+password');
+
+  if (!user) throw new CustomError.UnauthenticatedError('Invalid credential');
+  const isPasswordCorrect = await user.comparePassword(password);
+  if (!isPasswordCorrect) throw new CustomError.UnauthenticatedError('Invalid credential');
+  const token = user.createJWT();
+  res.status(StatusCodes.OK).json({
+    user: {
+      email: user.email,
+      lastName: user.lastName,
+      name: user.name,
+      location: user.location,
+    },token, location: user.location
+  })
+
 };
 
 const updateUser = async (req: Request, res: Response) => {
