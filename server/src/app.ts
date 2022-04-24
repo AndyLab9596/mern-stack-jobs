@@ -9,6 +9,7 @@ import connectDb from "./db/connectDb";
 // custom middleware
 import notFoundMiddleware from "./middleware/not-found";
 import errorHandlerMiddleware from "./middleware/error-handler";
+import authenticateUser from './middleware/authenticateUser';
 
 // routers
 import authRouter from "./routes/authRoutes";
@@ -30,7 +31,7 @@ app.get("/api/v1", (req: Request, res: Response) => {
 });
 
 app.use("/api/v1/auth", authRouter);
-app.use("/api/v1/jobs", jobRouter);
+app.use("/api/v1/jobs", authenticateUser, jobRouter);
 
 // Custom Middleware
 app.use(notFoundMiddleware);
