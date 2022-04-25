@@ -118,7 +118,7 @@ const AppProvider = ({ children }: IAppProvider) => {
       addUserToLocalStorage({ user, token, location })
     } catch (error: any) {
       // localStorage
-      console.log(error.response)
+      console.log(error)
       dispatch({ type: ActionTypes.LOGIN_USER_ERROR, payload: { msg: error.response.data.msg } })
     }
     clearAlert()
@@ -134,7 +134,10 @@ const AppProvider = ({ children }: IAppProvider) => {
       dispatch({ type: ActionTypes.UPDATE_USER_SUCCESS, payload: { user, token, location } });
       addUserToLocalStorage({ user, token, location })
     } catch (error: any) {
-      dispatch({ type: ActionTypes.UPDATE_USER_ERROR, payload: { msg: error.response.data.msg } })
+      if (error.response.status !== 401) {
+        dispatch({ type: ActionTypes.UPDATE_USER_ERROR, payload: { msg: error.response.data.msg } })
+
+      }
     }
     clearAlert()
   }
