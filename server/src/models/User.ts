@@ -2,7 +2,7 @@ import mongoose, { Types, Document } from "mongoose";
 import validator from "validator";
 import bcrypt from "bcryptjs";
 import jwt from "jsonwebtoken";
-interface IUser extends Document {
+export interface IUser extends Document {
   name: string;
   email: string;
   password: string;

@@ -25,12 +25,13 @@ const auth = async (req: Request, res: Response, next: NextFunction) => {
 
     try {
         const payload = jwt.verify(token, process.env.JWT_SECRET as string);
-        req.user = payload
+        req.user = payload;
+        next()
     } catch (error) {
         throw new CustomError.UnauthenticatedError('Authentication valid')
     }
 
-    next()
+
 }
 
 export default auth;

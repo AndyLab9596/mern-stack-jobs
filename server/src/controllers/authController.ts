@@ -1,5 +1,5 @@
 import { Request, Response } from "express";
-import User from "../models/User";
+import User, { IUser } from "../models/User";
 import CustomError from "../errors";
 import { StatusCodes } from "http-status-codes";
 
@@ -46,13 +46,33 @@ const login = async (req: Request, res: Response) => {
       lastName: user.lastName,
       name: user.name,
       location: user.location,
-    },token, location: user.location
+    }, token, location: user.location
   })
 
 };
 
 const updateUser = async (req: Request, res: Response) => {
-  res.send("Update user");
+  const { email, name, lastName, location } = req.body;
+
+  if (!email || !name || !lastName || !location) {
+    throw new CustomError.BadRequestError('Please provide all values')
+  }
+
+  const user = await User.findOne<IUser>({ email });
+
+  if (!user) throw new CustomError.NotFoundError('User not found');
+
+  user.email = email;
+  user.name = name;
+  user.lastName = lastName;
+  user.location = location;
+
+  const token = user.createJWT();
+  res.status(StatusCodes.OK).json({
+    user,
+    token,
+    location: user.location
+  })
 };
 
 export { register, login, updateUser };
