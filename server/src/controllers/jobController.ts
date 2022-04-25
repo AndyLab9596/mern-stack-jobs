@@ -1,7 +1,16 @@
 import { Request, Response } from "express";
+import CustomError from "../errors";
+import { StatusCodes } from "http-status-codes";
+import Job from '../models/Job';
 
 const createJob = async (req: Request, res: Response) => {
-  res.send("create job");
+  const { position, company } = req.body;
+
+  if (!position || !company) throw new CustomError.BadRequestError('Please provide all values');
+
+  req.body.createdBy = req.user.userId;
+  const job = await Job.create(req.body);
+  res.status(StatusCodes.CREATED).json({ job })
 };
 
 const deleteJob = async (req: Request, res: Response) => {
