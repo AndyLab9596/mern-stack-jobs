@@ -5,7 +5,8 @@ import React, {
   useReducer
 } from "react";
 import authApi from "../api/authentication";
-import { UserRegister } from "../models";
+import userApi from "../api/userApi";
+import { UpdatedUserInfo, UserRegister } from "../models";
 import ActionTypes from "./actions";
 import reducer from "./reducer";
 
@@ -18,6 +19,7 @@ export interface IUser {
   email: string;
   password?: string;
   location?: string;
+  lastName?: string;
 }
 
 export type InitialStateType = {
@@ -36,6 +38,7 @@ export type InitialStateType = {
   logoutUser: () => void;
   showSidebar: boolean;
   toggleSidebar: () => void;
+  updateUser: (updatedUserInfo: UpdatedUserInfo) => void
 };
 
 const token = localStorage.getItem('token');
@@ -57,6 +60,7 @@ const initialState: InitialStateType = {
   logoutUser: () => null,
   showSidebar: false,
   toggleSidebar: () => null,
+  updateUser: () => null,
 };
 
 const AppContext = createContext<InitialStateType>(initialState);
@@ -120,6 +124,21 @@ const AppProvider = ({ children }: IAppProvider) => {
     clearAlert()
   };
 
+  const updateUser = async (updatedUserInfo: UpdatedUserInfo) => {
+    dispatch({ type: ActionTypes.UPDATE_USER_BEGIN });
+
+    try {
+      const response = await userApi.updateUser(updatedUserInfo);
+      console.log(response)
+      const { token, user, location } = response;
+      dispatch({ type: ActionTypes.UPDATE_USER_SUCCESS, payload: { user, token, location } });
+      addUserToLocalStorage({ user, token, location })
+    } catch (error: any) {
+      dispatch({ type: ActionTypes.UPDATE_USER_ERROR, payload: { msg: error.response.data.msg } })
+    }
+    clearAlert()
+  }
+
   const logoutUser = () => {
     dispatch({ type: ActionTypes.LOGOUT_USER });
     removeUserFromLocalStorage()
@@ -137,7 +156,8 @@ const AppProvider = ({ children }: IAppProvider) => {
       registerUser,
       loginUser,
       toggleSidebar,
-      logoutUser
+      logoutUser,
+      updateUser
     }}>
       {children}
     </AppContext.Provider>

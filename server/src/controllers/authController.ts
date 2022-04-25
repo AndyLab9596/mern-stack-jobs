@@ -53,14 +53,11 @@ const login = async (req: Request, res: Response) => {
 
 const updateUser = async (req: Request, res: Response) => {
   const { email, name, lastName, location } = req.body;
-
   if (!email || !name || !lastName || !location) {
     throw new CustomError.BadRequestError('Please provide all values')
   }
 
-  const user = await User.findOne<IUser>({ email });
-
-  if (!user) throw new CustomError.NotFoundError('User not found');
+  const user = await User.findOne({ _id: req.user.userId }) as IUser;
 
   user.email = email;
   user.name = name;

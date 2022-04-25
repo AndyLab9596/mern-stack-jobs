@@ -1,16 +1,20 @@
 import { NextFunction, Request, Response } from 'express';
 import jwt, { JwtPayload } from 'jsonwebtoken';
 import CustomError from '../errors/';
+import {Types} from 'mongoose'; 
+interface Payload {
+    userId: Types.ObjectId
+}
 
 declare module "express-serve-static-core" {
     interface Request {
-        user: string | JwtPayload
+        user: Payload
     }
 }
 
 declare module "express" {
     interface Request {
-        user: string | JwtPayload
+        user: Payload
     }
 }
 
@@ -24,8 +28,8 @@ const auth = async (req: Request, res: Response, next: NextFunction) => {
     const token = authHeader.split(' ')[1];
 
     try {
-        const payload = jwt.verify(token, process.env.JWT_SECRET as string);
-        req.user = payload;
+        const payload = jwt.verify(token, process.env.JWT_SECRET as string) as Payload;
+        req.user = {userId: payload.userId};
         next()
     } catch (error) {
         throw new CustomError.UnauthenticatedError('Authentication valid')

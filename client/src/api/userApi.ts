@@ -4,7 +4,7 @@ import { UpdatedUserInfo, UserRegister } from "../models";
 const userApi = {
     updateUser(updatedUserInfo: UpdatedUserInfo): Promise<UserRegister> {
         const url = '/auth/updateUser';
-        return axiosClient.post(url, updatedUserInfo)
+        return axiosClient.patch(url, updatedUserInfo)
     }
 }
 

@@ -31,7 +31,17 @@ type AuthPayload = {
   [ActionTypes.LOGIN_USER_ERROR]: {
     msg: string,
   }
-  [ActionTypes.LOGOUT_USER]: undefined
+  [ActionTypes.LOGOUT_USER]: undefined,
+
+  [ActionTypes.UPDATE_USER_BEGIN]: undefined,
+  [ActionTypes.UPDATE_USER_SUCCESS]: {
+    user: IUser,
+    token: string,
+    location: string
+  },
+  [ActionTypes.UPDATE_USER_ERROR]: {
+    msg: string,
+  }
 }
 
 type DashboardPayload = {
@@ -139,6 +149,37 @@ const reducer = (state: InitialStateType, action: AlertActions | AuthActions | D
       return {
         ...state,
         showSidebar: !state.showSidebar
+      }
+    }
+
+    case ActionTypes.UPDATE_USER_BEGIN: {
+      return {
+        ...state,
+        isLoading: true
+      }
+    }
+
+    case ActionTypes.UPDATE_USER_SUCCESS: {
+      return {
+        ...state,
+        isLoading: false,
+        user: action.payload.user,
+        token: action.payload.token,
+        userLocation: action.payload.location,
+        jobLocation: action.payload.location,
+        showAlert: true,
+        alertType: "success",
+        alertText: "User profile updated",
+      }
+    }
+
+    case ActionTypes.UPDATE_USER_ERROR: {
+      return {
+        ...state,
+        isLoading: false,
+        showAlert: true,
+        alertType: "danger",
+        alertText: action.payload.msg,
       }
     }
 
