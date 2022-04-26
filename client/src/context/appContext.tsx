@@ -5,8 +5,9 @@ import React, {
   useReducer
 } from "react";
 import authApi from "../api/authentication";
+import jobApi from "../api/jobApi";
 import userApi from "../api/userApi";
-import { UpdatedUserInfo, UserRegister } from "../models";
+import { IJobAdd, UpdatedUserInfo, UserRegister } from "../models";
 import ActionTypes from "./actions";
 import reducer from "./reducer";
 
@@ -52,7 +53,8 @@ export type InitialStateType = {
   jobTypeOptions: JobTypes,
   jobType: JobType,
   statusOptions: StatusTypes,
-  status: StatusType
+  status: StatusType,
+  createJob: (addJob: IJobAdd) => void
 };
 
 const token = localStorage.getItem('token');
@@ -85,6 +87,7 @@ const initialState: InitialStateType = {
   jobType: 'full-time',
   statusOptions: ['pending', 'interview', 'declined'],
   status: 'pending',
+  createJob: () => null
 };
 
 const AppContext = createContext<InitialStateType>(initialState);
@@ -175,6 +178,33 @@ const AppProvider = ({ children }: IAppProvider) => {
     dispatch({ type: ActionTypes.TOGGLE_SIDEBAR })
   }
 
+  const createJob = async (addedJob: IJobAdd) => {
+    dispatch({ type: ActionTypes.CREATE_JOB_BEGIN });
+
+    try {
+      const { position, company, jobType, status, jobLocation } = addedJob;
+      await jobApi.createJob({
+        position,
+        company,
+        jobType,
+        status,
+        jobLocation
+      })
+      dispatch({ type: ActionTypes.CREATE_JOB_SUCCESS })
+
+    } catch (error: any) {
+      console.log('error', error)
+      if (error.response.status === 401) return;
+      dispatch({
+        type: ActionTypes.CREATE_JOB_ERROR,
+        payload: {
+          msg: error.msg
+        }
+      })
+    }
+    clearAlert()
+  }
+
 
   return (
     <AppContext.Provider value={{
@@ -184,7 +214,8 @@ const AppProvider = ({ children }: IAppProvider) => {
       loginUser,
       toggleSidebar,
       logoutUser,
-      updateUser
+      updateUser,
+      createJob
     }}>
       {children}
     </AppContext.Provider>

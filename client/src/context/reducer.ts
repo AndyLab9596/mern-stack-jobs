@@ -45,7 +45,13 @@ type AuthPayload = {
 }
 
 type DashboardPayload = {
-  [ActionTypes.TOGGLE_SIDEBAR]: undefined
+  [ActionTypes.TOGGLE_SIDEBAR]: undefined,
+
+  [ActionTypes.CREATE_JOB_BEGIN]: undefined,
+  [ActionTypes.CREATE_JOB_SUCCESS]: undefined,
+  [ActionTypes.CREATE_JOB_ERROR]: {
+    msg: string
+  }
 }
 
 type AuthActions = ActionMap<AuthPayload>[keyof AuthPayload];
@@ -53,6 +59,7 @@ type AuthActions = ActionMap<AuthPayload>[keyof AuthPayload];
 type AlertActions = ActionMap<AlertPayload>[keyof AlertPayload];
 
 type DashboardActions = ActionMap<DashboardPayload>[keyof DashboardPayload];
+
 
 const reducer = (state: InitialStateType, action: AlertActions | AuthActions | DashboardActions) => {
   switch (action.type) {
@@ -180,6 +187,33 @@ const reducer = (state: InitialStateType, action: AlertActions | AuthActions | D
         showAlert: true,
         alertType: "danger",
         alertText: action.payload.msg,
+      }
+    }
+
+    case ActionTypes.CREATE_JOB_BEGIN: {
+      return {
+        ...state,
+        isLoading: true
+      }
+    }
+
+    case ActionTypes.CREATE_JOB_SUCCESS: {
+      return {
+        ...state,
+        isLoading: false,
+        showAlert: true,
+        alertType: 'success',
+        alertText: 'New Job created'
+      }
+    }
+
+    case ActionTypes.CREATE_JOB_ERROR: {
+      return {
+        ...state,
+        isLoading: false,
+        showAlert: true,
+        alertType: 'danger',
+        alertText: action.payload.msg
       }
     }
 

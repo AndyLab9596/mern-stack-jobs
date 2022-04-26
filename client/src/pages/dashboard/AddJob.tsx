@@ -22,7 +22,8 @@ const AddJob = () => {
         jobTypeOptions,
         status,
         statusOptions,
-        isLoading
+        isLoading,
+        createJob
     } = useAppContext();
 
     const initialValues: IJobAdd = {
@@ -43,6 +44,11 @@ const AddJob = () => {
 
     const handleSubmit = (values: IJobAdd) => {
         console.log(values)
+        if (isEditing) {
+            // edit job
+
+        }
+        createJob(values)
     }
 
     return (
@@ -62,14 +68,6 @@ const AddJob = () => {
                     <FormSelectField label='Status' name='status' options={statusOptions} />
                     <FormSelectField label='Job Type' name='jobType' options={jobTypeOptions} />
                     <ButtonGroup isLoading={isLoading} />
-                    {/* <div className='btn-container'>
-                        <button type='submit' className='btn btn-block' disabled={isLoading} >
-                            {isLoading ? 'Please wait...' : 'Save Changes'}
-                        </button>
-                        <button type="button" className='btn btn-block btn-reset' >
-                            Clear
-                        </button>
-                    </div> */}
                 </div>
             </Form>
 
