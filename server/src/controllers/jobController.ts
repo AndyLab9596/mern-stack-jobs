@@ -22,7 +22,8 @@ const updateJob = async (req: Request, res: Response) => {
 };
 
 const getAllJobs = async (req: Request, res: Response) => {
-  res.send("Get All Jobs");
+  const jobs = await Job.find({ createdBy: req.user.userId });
+  res.status(StatusCodes.OK).json({ jobs, totalJobs: jobs.length, numOfPages: 1 });
 };
 
 const showStats = async (req: Request, res: Response) => {
