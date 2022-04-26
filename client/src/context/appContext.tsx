@@ -21,6 +21,10 @@ export interface IUser {
   location?: string;
   lastName?: string;
 }
+export type JobTypes = ['full-time', 'part-time', 'remote', 'internship'];
+export type StatusTypes = ['pending', 'interview', 'declined'];
+export type JobType = JobTypes[keyof JobTypes];
+export type StatusType = StatusTypes[keyof StatusTypes];
 
 export type InitialStateType = {
   isLoading: boolean;
@@ -38,7 +42,17 @@ export type InitialStateType = {
   logoutUser: () => void;
   showSidebar: boolean;
   toggleSidebar: () => void;
-  updateUser: (updatedUserInfo: UpdatedUserInfo) => void
+  updateUser: (updatedUserInfo: UpdatedUserInfo) => void;
+
+  isEditing: boolean;
+  editJobId: string;
+  position: string;
+  company: string,
+  // jobTypeOptions: string[],
+  jobTypeOptions: JobTypes,
+  jobType: JobType,
+  statusOptions: StatusTypes,
+  status: StatusType
 };
 
 const token = localStorage.getItem('token');
@@ -61,6 +75,16 @@ const initialState: InitialStateType = {
   showSidebar: false,
   toggleSidebar: () => null,
   updateUser: () => null,
+
+  isEditing: false,
+  editJobId: '',
+  position: '',
+  company: '',
+  //jobLocation
+  jobTypeOptions: ['full-time', 'part-time', 'remote', 'internship'],
+  jobType: 'full-time',
+  statusOptions: ['pending', 'interview', 'declined'],
+  status: 'pending',
 };
 
 const AppContext = createContext<InitialStateType>(initialState);

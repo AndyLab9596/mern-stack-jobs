@@ -29,7 +29,7 @@ const Wrapper = styled.section`
     display: grid;
     grid-template-columns: 1fr 1fr;
     column-gap: 1rem;
-    align-self: flex-end;
+    /* align-self: flex-end; */
     margin-top: 0.5rem;
     button {
       height: 35px;

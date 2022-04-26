@@ -31,6 +31,9 @@ const FormInputWrapper = styled.div`
     font-size: var(--small-text);
     margin-bottom: 0;
   }
+  .inputSpace {
+    margin-bottom: 24.5px;
+  }
 `;
 
 const FormInputField: React.FC<FormInputFieldProps> = ({
@@ -45,9 +48,9 @@ const FormInputField: React.FC<FormInputFieldProps> = ({
   return (
     <FormInputWrapper>
       <label htmlFor={name}>{label}</label>
-      <input type={type} {...register(`${name}` as const)} />
+      <input type={type} {...register(`${name}` as const)} className={!errors[name] ? 'inputSpace': ''}/>
       <p className="error-message">
-        {!!errors[name] && `*${errors[name].message}`}
+        {!!errors[name] ? `*${errors[name].message}`: ""}
       </p>
     </FormInputWrapper>
   );
