@@ -1,10 +1,12 @@
-import React from 'react'
+import React from 'react';
 import { NavLink } from 'react-router-dom';
-import { useAppContext } from '../context/appContext';
 import links from './links';
 
-const NavLinks = () => {
-    const { toggleSidebar } = useAppContext();
+interface NavLinksProps {
+    toggleSidebar?: () => void
+}
+
+const NavLinks: React.FC<NavLinksProps> = ({ toggleSidebar }) => {
     return (
         <div className="nav-links">
             {links.map((link) => {

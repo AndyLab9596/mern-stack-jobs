@@ -2,6 +2,7 @@ import React, {
   createContext,
   ReactChild,
   useContext,
+  useEffect,
   useReducer
 } from "react";
 import authApi from "../api/authentication";
@@ -54,7 +55,19 @@ export type InitialStateType = {
   jobType: JobType,
   statusOptions: StatusTypes,
   status: StatusType,
-  createJob: (addJob: IJobAdd) => void
+  createJob: (addJob: IJobAdd) => void,
+
+  jobs: IJobAdd[],
+  totalJobs: number,
+  numOfPages: number,
+  page: number,
+  getJobs: () => void,
+
+  setEditJob: (id: string) => void,
+  deleteJob: (id: string) => void,
+  editJob: () => void,
+
+  clearValues: () => void,
 };
 
 const token = localStorage.getItem('token');
@@ -87,7 +100,19 @@ const initialState: InitialStateType = {
   jobType: 'full-time',
   statusOptions: ['pending', 'interview', 'declined'],
   status: 'pending',
-  createJob: () => null
+  createJob: () => null,
+
+  jobs: [],
+  totalJobs: 0,
+  numOfPages: 1,
+  page: 1,
+  getJobs: () => null,
+
+  setEditJob: (id) => null,
+  deleteJob: (id) => null,
+  editJob: () => null,
+
+  clearValues: () => null,
 };
 
 const AppContext = createContext<InitialStateType>(initialState);
@@ -205,6 +230,47 @@ const AppProvider = ({ children }: IAppProvider) => {
     clearAlert()
   }
 
+  const getJobs = async () => {
+    dispatch({ type: ActionTypes.GET_ALL_JOBS_BEGIN });
+
+    try {
+      const { jobs, totalJobs, numOfPages } = await jobApi.getAllJobs();
+      dispatch({
+        type: ActionTypes.GET_ALL_JOBS_SUCCESS, payload: {
+          jobs,
+          totalJobs,
+          numOfPages
+        }
+      })
+    } catch (error: any) {
+      console.log(error.response)
+    }
+  }
+
+  const setEditJob = (id: string) => {
+    dispatch({
+      type: ActionTypes.SET_EDIT_JOB, payload: {
+        id,
+      }
+    })
+  }
+
+  const editJob = () => {
+    console.log('edit job')
+  }
+
+  const deleteJob = (id: string) => {
+    console.log(`delete: ${id}`)
+  }
+
+  const clearValues = () => {
+    dispatch({ type: ActionTypes.CLEAR_VALUES })
+  }
+
+  // useEffect(() => {
+  //   getJobs()
+  // },[])
+
 
   return (
     <AppContext.Provider value={{
@@ -215,7 +281,12 @@ const AppProvider = ({ children }: IAppProvider) => {
       toggleSidebar,
       logoutUser,
       updateUser,
-      createJob
+      createJob,
+      getJobs,
+      setEditJob,
+      deleteJob,
+      editJob,
+      clearValues
     }}>
       {children}
     </AppContext.Provider>

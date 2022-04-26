@@ -23,6 +23,7 @@ const updateJob = async (req: Request, res: Response) => {
 
 const getAllJobs = async (req: Request, res: Response) => {
   const jobs = await Job.find({ createdBy: req.user.userId });
+  console.log(jobs.length)
   res.status(StatusCodes.OK).json({ jobs, totalJobs: jobs.length, numOfPages: 1 });
 };
 

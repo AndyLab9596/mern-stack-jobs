@@ -1,3 +1,4 @@
+import { IJobAdd } from "../models";
 import ActionTypes from "./actions";
 import { InitialStateType, IUser } from "./appContext";
 
@@ -51,7 +52,17 @@ type DashboardPayload = {
   [ActionTypes.CREATE_JOB_SUCCESS]: undefined,
   [ActionTypes.CREATE_JOB_ERROR]: {
     msg: string
-  }
+  },
+  [ActionTypes.GET_ALL_JOBS_BEGIN]: undefined,
+  [ActionTypes.GET_ALL_JOBS_SUCCESS]: {
+    jobs: IJobAdd[],
+    totalJobs: number,
+    numOfPages: number,
+  },
+  [ActionTypes.SET_EDIT_JOB]: {
+    id: string
+  },
+  [ActionTypes.CLEAR_VALUES]: undefined,
 }
 
 type AuthActions = ActionMap<AuthPayload>[keyof AuthPayload];
@@ -214,6 +225,52 @@ const reducer = (state: InitialStateType, action: AlertActions | AuthActions | D
         showAlert: true,
         alertType: 'danger',
         alertText: action.payload.msg
+      }
+    }
+
+    case ActionTypes.GET_ALL_JOBS_BEGIN: {
+      return {
+        ...state,
+        isLoading: true,
+        showAlert: false,
+      }
+    }
+
+    case ActionTypes.GET_ALL_JOBS_SUCCESS: {
+      return {
+        ...state,
+        isLoading: false,
+        jobs: action.payload.jobs,
+        totalJobs: action.payload.totalJobs,
+        numOfPages: action.payload.numOfPages,
+      }
+    }
+
+    case ActionTypes.SET_EDIT_JOB: {
+      const job = state.jobs.find(job => job._id === action.payload.id) as IJobAdd;
+
+      return {
+        ...state,
+        isEditing: true,
+        editJobId: job._id as string,
+        position: job.position,
+        company: job.company,
+        jobLocation: job.jobLocation,
+        jobType: job.jobType,
+        status: job.status
+      }
+    }
+
+    case ActionTypes.CLEAR_VALUES: {
+      return {
+        ...state,
+        isEditing: false,
+        editJobId: '',
+        position: '',
+        company: '',
+        jobLocation: state.userLocation,
+        jobType: state.jobTypeOptions[0],
+        status: state.statusOptions[0],
       }
     }
 
