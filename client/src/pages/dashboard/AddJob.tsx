@@ -24,7 +24,7 @@ const AddJob = () => {
         statusOptions,
         isLoading,
         createJob,
-        editJob
+        updateJob
     } = useAppContext();
 
     const initialValues: IJobAdd = {
@@ -46,7 +46,7 @@ const AddJob = () => {
     const handleSubmit = (values: IJobAdd) => {
         if (isEditing) {
             // edit job
-            editJob();
+            updateJob();
             return;
         }
         createJob(values)

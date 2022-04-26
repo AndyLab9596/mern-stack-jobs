@@ -1,6 +1,6 @@
 import axios, { AxiosError, AxiosRequestConfig, AxiosResponse } from "axios";
 
-
+// console.log(localStorage.getItem('token'))
 const axiosClient = axios.create({
   baseURL: "/api/v1",
   headers: {

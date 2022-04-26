@@ -1,9 +1,7 @@
 import React, {
   createContext,
   ReactChild,
-  useContext,
-  useEffect,
-  useReducer
+  useContext, useReducer
 } from "react";
 import authApi from "../api/authentication";
 import jobApi from "../api/jobApi";
@@ -68,6 +66,7 @@ export type InitialStateType = {
   editJob: () => void,
 
   clearValues: () => void,
+  updateJob: () => void,
 };
 
 const token = localStorage.getItem('token');
@@ -113,6 +112,7 @@ const initialState: InitialStateType = {
   editJob: () => null,
 
   clearValues: () => null,
+  updateJob: () => null
 };
 
 const AppContext = createContext<InitialStateType>(initialState);
@@ -259,12 +259,43 @@ const AppProvider = ({ children }: IAppProvider) => {
     console.log('edit job')
   }
 
-  const deleteJob = (id: string) => {
-    console.log(`delete: ${id}`)
+  const deleteJob = async (id: string) => {
+    dispatch({ type: ActionTypes.DELETE_JOB_BEGIN });
+    try {
+      await jobApi.deleteJob(id);
+      getJobs()
+    } catch (error) {
+      logoutUser()
+    }
   }
 
   const clearValues = () => {
     dispatch({ type: ActionTypes.CLEAR_VALUES })
+  }
+
+  const updateJob = async () => {
+    dispatch({ type: ActionTypes.EDIT_JOB_BEGIN });
+
+    try {
+      const { position, company, jobLocation, jobType, status, editJobId } = state;
+      await jobApi.updateJob({
+        position,
+        company,
+        jobLocation,
+        jobType,
+        status,
+        _id: editJobId,
+      })
+      dispatch({ type: ActionTypes.EDIT_JOB_SUCCESS });
+      dispatch({ type: ActionTypes.CLEAR_VALUES })
+    } catch (error: any) {
+      dispatch({
+        type: ActionTypes.EDIT_JOB_ERROR, payload: {
+          msg: error.response.data.msg
+        }
+      })
+    }
+    clearAlert();
   }
 
   // useEffect(() => {
@@ -286,7 +317,8 @@ const AppProvider = ({ children }: IAppProvider) => {
       setEditJob,
       deleteJob,
       editJob,
-      clearValues
+      clearValues,
+      updateJob
     }}>
       {children}
     </AppContext.Provider>

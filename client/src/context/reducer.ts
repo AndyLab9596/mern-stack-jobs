@@ -63,6 +63,13 @@ type DashboardPayload = {
     id: string
   },
   [ActionTypes.CLEAR_VALUES]: undefined,
+
+  [ActionTypes.EDIT_JOB_BEGIN]: undefined,
+  [ActionTypes.EDIT_JOB_SUCCESS]: undefined,
+  [ActionTypes.EDIT_JOB_ERROR]: {
+    msg: string
+  },
+  [ActionTypes.DELETE_JOB_BEGIN]: undefined
 }
 
 type AuthActions = ActionMap<AuthPayload>[keyof AuthPayload];
@@ -271,6 +278,40 @@ const reducer = (state: InitialStateType, action: AlertActions | AuthActions | D
         jobLocation: state.userLocation,
         jobType: state.jobTypeOptions[0],
         status: state.statusOptions[0],
+      }
+    }
+
+    case ActionTypes.EDIT_JOB_BEGIN: {
+      return {
+        ...state,
+        isLoading: true
+      }
+    }
+
+    case ActionTypes.EDIT_JOB_SUCCESS: {
+      return {
+        ...state,
+        isLoading: false,
+        showAlert: true,
+        alertType: 'success',
+        alertText: 'Job updated'
+      }
+    }
+
+    case ActionTypes.EDIT_JOB_ERROR: {
+      return {
+        ...state,
+        isLoading: false,
+        showAlert: true,
+        alertType: 'danger',
+        alertText: action.payload.msg
+      }
+    }
+
+    case ActionTypes.DELETE_JOB_BEGIN: {
+      return {
+        ...state,
+        isLoading: true
       }
     }
 

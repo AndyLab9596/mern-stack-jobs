@@ -19,7 +19,7 @@ const deleteJob = async (req: Request, res: Response) => {
   const job = await Job.findOne({ _id: jobId });
 
   if (!job) throw new CustomError.NotFoundError(`No job with ${jobId}`)
-
+  checkPermission(req.user.userId, job.createdBy)
   await Job.findOneAndDelete({ _id: jobId })
   res.status(StatusCodes.OK).json({ msg: 'Delete job successfully' });
 };
@@ -27,14 +27,13 @@ const deleteJob = async (req: Request, res: Response) => {
 const updateJob = async (req: Request, res: Response) => {
   const { params: { id: jobId }, body: { company, position } } = req;
 
-  if (!company || position) throw new CustomError.BadRequestError('Please provide all values');
+  if (!company || !position) throw new CustomError.BadRequestError('Please provide all values');
 
   const job = await Job.findOne({ _id: jobId });
-
+  console.log(job)
   if (!job) throw new CustomError.NotFoundError(`No job with ${jobId}`)
 
-  console.log(typeof req.user.userId);
-  console.log(typeof job.createdBy);
+
   checkPermission(req.user.userId, job.createdBy)
 
   const updateJob = await Job.findOneAndUpdate({ _id: jobId }, req.body, {

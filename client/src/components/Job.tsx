@@ -23,7 +23,6 @@ const Job: React.FC<JobProps> = ({
     const { setEditJob, deleteJob } = useAppContext()
 
     let date = moment(createdAt).format('MMM Do, YYY');
-    console.log(date)
 
     return (
         <Wrapper>

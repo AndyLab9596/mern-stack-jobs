@@ -30,6 +30,12 @@ enum ActionTypes {
 
   SET_EDIT_JOB = 'SET_EDIT_JOB',
 
+  EDIT_JOB_BEGIN = 'EDIT_JOB_BEGIN',
+  EDIT_JOB_SUCCESS = 'EDIT_JOB_SUCCESS',
+  EDIT_JOB_ERROR = 'EDIT_JOB_ERROR',
+
+  DELETE_JOB_BEGIN = 'DELETE_JOB_BEGIN',
+
 }
 
 export default ActionTypes;
