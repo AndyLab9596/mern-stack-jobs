@@ -1,4 +1,4 @@
-import { IAllJobs, IJobAdd, ListParams } from "../models";
+import { IAllJobs, IJobAdd, IStatus, ListParams } from "../models";
 import axiosClient from "./axiosClient";
 
 const jobApi = {
@@ -17,6 +17,10 @@ const jobApi = {
     deleteJob(jobId: string) {
         const url = `jobs/${jobId}`;
         return axiosClient.delete(url);
+    },
+    showStats(): Promise<IStatus> {
+        const url = `jobs/stats`;
+        return axiosClient.get(url)
     }
 }
 

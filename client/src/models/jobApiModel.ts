@@ -17,3 +17,10 @@ export interface IAllJobs {
     numOfPages: number;
 
 }
+
+export interface IStatus {
+    stats: {
+        [index: string]: number
+    },
+    monthlyApplication: number[],
+}

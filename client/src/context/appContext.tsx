@@ -67,6 +67,13 @@ export type InitialStateType = {
 
   clearValues: () => void,
   updateJob: () => void,
+  stats: {
+    pending: number,
+    declined: number,
+    interview: number
+  }
+  monthlyApplication: number[],
+  showStats: () => void
 };
 
 const token = localStorage.getItem('token');
@@ -112,7 +119,15 @@ const initialState: InitialStateType = {
   editJob: () => null,
 
   clearValues: () => null,
-  updateJob: () => null
+  updateJob: () => null,
+
+  stats: {
+    pending: 0,
+    declined: 0,
+    interview: 0
+  },
+  monthlyApplication: [],
+  showStats: () => null
 };
 
 const AppContext = createContext<InitialStateType>(initialState);
@@ -298,6 +313,22 @@ const AppProvider = ({ children }: IAppProvider) => {
     clearAlert();
   }
 
+  const showStats = async () => {
+    dispatch({ type: ActionTypes.SHOW_STATS_BEGIN });
+    try {
+      const response = await jobApi.showStats();
+      dispatch({
+        type: ActionTypes.SHOW_STATS_SUCCESS, payload: {
+          stats: response.stats,
+          monthlyApplication: response.monthlyApplication
+        }
+      })
+    } catch (error) {
+      console.log(error)
+
+    }
+  }
+
   // useEffect(() => {
   //   getJobs()
   // },[])
@@ -318,7 +349,8 @@ const AppProvider = ({ children }: IAppProvider) => {
       deleteJob,
       editJob,
       clearValues,
-      updateJob
+      updateJob,
+      showStats
     }}>
       {children}
     </AppContext.Provider>

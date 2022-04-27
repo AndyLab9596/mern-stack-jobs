@@ -36,6 +36,9 @@ enum ActionTypes {
 
   DELETE_JOB_BEGIN = 'DELETE_JOB_BEGIN',
 
+  SHOW_STATS_BEGIN = 'SHOW_STATS_BEGIN',
+  SHOW_STATS_SUCCESS = 'SHOW_STATS_SUCCESS'
+
 }
 
 export default ActionTypes;

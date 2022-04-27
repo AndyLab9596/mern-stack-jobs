@@ -69,7 +69,12 @@ type DashboardPayload = {
   [ActionTypes.EDIT_JOB_ERROR]: {
     msg: string
   },
-  [ActionTypes.DELETE_JOB_BEGIN]: undefined
+  [ActionTypes.DELETE_JOB_BEGIN]: undefined,
+  [ActionTypes.SHOW_STATS_BEGIN]: undefined,
+  [ActionTypes.SHOW_STATS_SUCCESS]: {
+    stats: { [index: string]: number },
+    monthlyApplication: number[]
+  }
 }
 
 type AuthActions = ActionMap<AuthPayload>[keyof AuthPayload];
@@ -312,6 +317,22 @@ const reducer = (state: InitialStateType, action: AlertActions | AuthActions | D
       return {
         ...state,
         isLoading: true
+      }
+    }
+
+    case ActionTypes.SHOW_STATS_BEGIN: {
+      return {
+        ...state,
+        isLoading: true
+      }
+    }
+
+    case ActionTypes.SHOW_STATS_SUCCESS: {
+      return {
+        ...state,
+        isLoading: false,
+        state: action.payload.stats,
+        monthlyApplication: action.payload.monthlyApplication
       }
     }
 
