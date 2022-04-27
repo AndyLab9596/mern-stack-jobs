@@ -3,6 +3,15 @@ import CustomError from "../errors";
 import { StatusCodes } from "http-status-codes";
 import Job from '../models/Job';
 import checkPermission from "../utls/checkPermission";
+import mongoose, { Types, Schema } from "mongoose";
+
+interface IStats {
+  stats: {
+    pending: number,
+    interview: number,
+    declined: number,
+  }
+}
 
 const createJob = async (req: Request, res: Response) => {
   const { position, company } = req.body;
@@ -51,7 +60,31 @@ const getAllJobs = async (req: Request, res: Response) => {
 };
 
 const showStats = async (req: Request, res: Response) => {
-  res.send("show stats");
+  let stats = await Job.aggregate([
+    { $match: { createdBy: new mongoose.Types.ObjectId(req.user.userId) } },
+    { $group: { _id: '$status', count: { $sum: 1 } } }
+  ])
+
+  const finalStats = stats.reduce((acc, curr) => {
+    const { _id: title, count } = curr;
+    acc[title] = count;
+    return acc
+  }, {})
+  // stats  = stats.reduce((acc, curr) => {
+  //   const { _id: title, count } = curr;
+  //   acc[title] = count;
+  //   return acc
+  // }, {}) 
+
+  const defaultStats = {
+    pending: finalStats.pending || 0,
+    interview: finalStats.interview || 0,
+    declined: finalStats.declined || 0
+  }
+
+  const monthlyApplications: number[] = [];
+
+  res.status(StatusCodes.OK).json({ defaultStats, monthlyApplications });
 };
 
 export { createJob, deleteJob, updateJob, getAllJobs, showStats };
